@@ -38,15 +38,34 @@ class Racket(GameSprite):
 
 racket_l = Racket('racket.png', 20, 100, 10, 20, 110)
 racket_r = Racket('racket.png', 680, 100, 10, 20, 110)
+ball = GameSprite('tenis_ball.png', 200, 300, 10, 50, 50)
 
 game = True
 clock = time.Clock()
 FPS = 60
+
+dx = 3
+dy = 3
+
 while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
     window.fill((200, 255, 255))
+
+    ball.rect.x += dx
+    ball.rect.y += dy
+
+    if ball.rect.y > 450 or ball.rect.y < 0:
+        dy = dy * (-1)
+
+    if sprite.collide_rect(racket_l, ball) or sprite.collide_rect(racket_r, ball):
+        dx = dx * (-1)
+
+
+    ball.reset()
+
+    
     racket_l.reset()
     racket_l.move_l()
 
