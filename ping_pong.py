@@ -20,6 +20,9 @@ class GameSprite(sprite.Sprite):
     def reset(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
+font.init()
+lose1 = font.Font(None, 50).render('Player 1 Lost!!', False, (255, 0, 0))
+lose2 = font.Font(None, 50).render('Player 2 Lost!!', False, (255, 0, 0))
 
 class Racket(GameSprite):
     def move_r(self):
@@ -46,12 +49,12 @@ FPS = 60
 
 dx = 3
 dy = 3
+finish = False
 
 while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-    window.fill((200, 255, 255))
 
     ball.rect.x += dx
     ball.rect.y += dy
@@ -62,16 +65,27 @@ while game:
     if sprite.collide_rect(racket_l, ball) or sprite.collide_rect(racket_r, ball):
         dx = dx * (-1)
 
-
-    ball.reset()
+    if ball.rect.x < 0:
+        window.blit(lose1, (100, 250))
+        finish = True
+                    
+    if ball.rect.x > 700:
+        window.blit(lose2, (400, 250))
+        finish = True
 
     
-    racket_l.reset()
-    racket_l.move_l()
+
+    if not finish:
+        window.fill((200, 255, 255))
+
+        racket_l.reset()
+        racket_l.move_l()
 
 
-    racket_r.reset()
-    racket_r.move_r()
+        racket_r.reset()
+        racket_r.move_r()
+
+        ball.reset()
 
     display.update()
     clock.tick(FPS)
